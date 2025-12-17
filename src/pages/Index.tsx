@@ -1,10 +1,11 @@
 import { Header } from "@/components/Header";
 import { Badge } from "@/components/Badge";
 import { HeroCard } from "@/components/HeroCard";
+import { InfoSections } from "@/components/InfoSections";
 
 const Index = () => {
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen">
       {/* Background gradient */}
       <div className="fixed inset-0 -z-20 bg-background" />
       
@@ -26,25 +27,41 @@ const Index = () => {
 
       <Header />
 
-      <main className="relative flex flex-col items-center justify-center min-h-screen px-6 py-20">
-        {/* Badge */}
-        <div 
-          className="mb-8 animate-fade-in-up"
-          style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
-        >
-          <Badge>Early Research Prototype</Badge>
-        </div>
+      <main className="relative">
+        {/* Hero Section - Full viewport height */}
+        <section className="flex flex-col items-center justify-center min-h-screen px-6 py-20">
+          {/* Badge */}
+          <div 
+            className="mb-8 animate-fade-in-up"
+            style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
+          >
+            <Badge>Early Research Prototype</Badge>
+          </div>
 
-        {/* Hero Card */}
-        <HeroCard />
+          {/* Hero Card */}
+          <HeroCard />
 
-        {/* Footer text */}
-        <p 
-          className="mt-16 text-xs text-muted-foreground/60 text-center animate-fade-in-up"
-          style={{ animationDelay: "0.8s", animationFillMode: "backwards" }}
-        >
-          Built with curiosity. Powered by AI.
-        </p>
+          {/* Scroll indicator */}
+          <div 
+            className="mt-16 animate-fade-in-up"
+            style={{ animationDelay: "1s", animationFillMode: "backwards" }}
+          >
+            <div className="flex flex-col items-center gap-2 text-muted-foreground/40">
+              <span className="text-xs">Scroll to learn more</span>
+              <div className="w-px h-8 bg-gradient-to-b from-muted-foreground/40 to-transparent" />
+            </div>
+          </div>
+        </section>
+
+        {/* Info Sections */}
+        <InfoSections />
+
+        {/* Footer */}
+        <footer className="py-12 text-center border-t border-border/20">
+          <p className="text-xs text-muted-foreground/60">
+            Built with curiosity. Powered by AI.
+          </p>
+        </footer>
       </main>
     </div>
   );
