@@ -1,4 +1,15 @@
-# Welcome to your Lovable project
+# NexAI SEO – Landing Page
+
+This repository contains the early research landing page for NexAI SEO.
+
+Purpose:
+- Communicate vision
+- Capture early interest signals
+- No production backend yet
+
+Status:
+- Early research prototype
+
 
 ## Project info
 
