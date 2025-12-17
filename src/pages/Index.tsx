@@ -2,6 +2,8 @@ import { Header } from "@/components/Header";
 import { Badge } from "@/components/Badge";
 import { HeroCard } from "@/components/HeroCard";
 import { InfoSections } from "@/components/InfoSections";
+import { Footer } from "@/components/Footer";
+import { ScrollIndicator } from "@/components/ScrollIndicator";
 
 const Index = () => {
   return (
@@ -29,7 +31,7 @@ const Index = () => {
 
       <main className="relative">
         {/* Hero Section - Full viewport height */}
-        <section className="flex flex-col items-center justify-center min-h-screen px-6 py-20">
+        <section className="relative flex flex-col items-center justify-center min-h-screen px-6 py-20">
           {/* Badge */}
           <div 
             className="mb-8 animate-fade-in-up"
@@ -42,26 +44,49 @@ const Index = () => {
           <HeroCard />
 
           {/* Scroll indicator */}
-          <div 
-            className="mt-16 animate-fade-in-up"
-            style={{ animationDelay: "1s", animationFillMode: "backwards" }}
-          >
-            <div className="flex flex-col items-center gap-2 text-muted-foreground/40">
-              <span className="text-xs">Scroll to learn more</span>
-              <div className="w-px h-8 bg-gradient-to-b from-muted-foreground/40 to-transparent" />
-            </div>
-          </div>
+          <ScrollIndicator />
         </section>
 
-        {/* Info Sections */}
-        <InfoSections />
+        {/* Section separator - smooth gradient transition */}
+        <div className="relative h-32 -mt-16">
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(180deg, 
+                transparent 0%, 
+                hsl(var(--background)) 30%,
+                hsl(222 47% 4%) 100%
+              )`
+            }}
+          />
+          {/* Subtle noise texture overlay */}
+          <div 
+            className="absolute inset-0 opacity-[0.015]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`
+            }}
+          />
+        </div>
+
+        {/* Info Sections with slightly darker background */}
+        <div 
+          className="relative"
+          style={{
+            background: `linear-gradient(180deg, 
+              hsl(222 47% 4%) 0%, 
+              hsl(222 47% 3.5%) 50%,
+              hsl(222 47% 4%) 100%
+            )`
+          }}
+        >
+          {/* Subtle top glow line */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <InfoSections />
+        </div>
 
         {/* Footer */}
-        <footer className="py-12 text-center border-t border-border/20">
-          <p className="text-xs text-muted-foreground/60">
-            Built with curiosity. Powered by AI.
-          </p>
-        </footer>
+        <Footer />
       </main>
     </div>
   );
