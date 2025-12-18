@@ -37,7 +37,7 @@ export const HeroCard = () => {
           style={{ animationDelay: "0.3s" }}
         >
           <span className="mr-3">🚧</span>
-          <span className="gradient-text">We're Coming Soon</span>
+          <span className="gradient-text">We are Coming Soon</span>
         </h1>
 
         {/* Subheading */}
