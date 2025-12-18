@@ -1,4 +1,12 @@
 import logoIcon from "@/assets/logo-icon.png";
+import { Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
+
+const socialLinks = [
+  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
+];
 
 export const Footer = () => {
   return (
@@ -24,6 +32,22 @@ export const Footer = () => {
             </span>
           </div>
 
+          {/* Social links */}
+          <div className="flex items-center gap-4">
+            {socialLinks.map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="p-2 rounded-full border border-border/30 bg-muted/10 text-muted-foreground hover:text-primary hover:border-primary/50 hover:bg-primary/10 hover:shadow-[0_0_12px_hsl(var(--primary)/0.3)] transition-all duration-300"
+              >
+                <Icon className="w-4 h-4" />
+              </a>
+            ))}
+          </div>
+
           {/* Contact info */}
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-sm text-muted-foreground">
             <a 
@@ -46,7 +70,6 @@ export const Footer = () => {
 
           {/* Bottom section */}
           <div className="flex flex-col items-center gap-2 text-xs text-muted-foreground/60">
-            <p>Early research prototype</p>
             <p>© 2025 NexAI SEO. All rights reserved.</p>
           </div>
         </div>

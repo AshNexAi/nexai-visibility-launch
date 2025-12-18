@@ -37,7 +37,7 @@ const Index = () => {
             className="mb-8 animate-fade-in-up"
             style={{ animationDelay: "0.1s", animationFillMode: "backwards" }}
           >
-            <Badge>Early Research Prototype</Badge>
+            <Badge>Early Access</Badge>
           </div>
 
           {/* Waitlist Form */}
