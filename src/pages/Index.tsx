@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Badge } from "@/components/Badge";
-import { HeroCard } from "@/components/HeroCard";
+import { WaitlistForm } from "@/components/WaitlistForm";
 import { InfoSections } from "@/components/InfoSections";
 import { Footer } from "@/components/Footer";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
@@ -40,8 +40,8 @@ const Index = () => {
             <Badge>Early Research Prototype</Badge>
           </div>
 
-          {/* Hero Card */}
-          <HeroCard />
+          {/* Waitlist Form */}
+          <WaitlistForm />
 
           {/* Scroll indicator */}
           <ScrollIndicator />
