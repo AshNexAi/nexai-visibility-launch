@@ -1,10 +1,10 @@
 import logoIcon from "@/assets/logo-icon.png";
-import { Linkedin, Twitter, Instagram, Youtube } from "lucide-react";
+import { Linkedin, Instagram, Youtube, X } from "lucide-react";
 
 const socialLinks = [
-  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  { icon: Linkedin, href: "https://www.linkedin.com/company/nexaiseo/", label: "LinkedIn" },
+  { icon: X, href: "https://x.com/NexAISEO", label: "X" },
+  { icon: Instagram, href: "https://www.instagram.com/nexai.seo/", label: "Instagram" },
   { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
 ];
 
