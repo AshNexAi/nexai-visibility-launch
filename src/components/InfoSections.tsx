@@ -54,9 +54,9 @@ export const InfoSections = () => {
             What is NexAI SEO?
           </h2>
           <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            NexAI SEO is exploring <span className="text-foreground font-medium">Generative Engine Optimization (GEO)</span> — 
+            NexAI SEO is building for <span className="text-foreground font-medium">Generative Engine Optimization (GEO)</span> — 
             helping brands understand how AI systems interpret and surface content in AI-generated answers. 
-            We're researching the invisible layer between your content and how AI talks about you.
+            We're developing tools to illuminate the invisible layer between your content and how AI talks about you.
           </p>
         </section>
       </AnimatedSection>
@@ -93,14 +93,14 @@ export const InfoSections = () => {
         </section>
       </AnimatedSection>
 
-      {/* What we're experimenting with */}
+      {/* What we're building */}
       <AnimatedSection delay={200}>
         <section className="text-center">
           <h2 className="text-xl md:text-2xl font-semibold mb-6 gradient-text">
-            What we're experimenting with
+            What we're building
           </h2>
           <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-            This is an early research prototype. We're exploring:
+            This is an early version of NexAI SEO. We're starting with foundational capabilities:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <span className="px-4 py-2 rounded-full border border-border/50 bg-muted/20 text-sm text-muted-foreground hover:border-primary/30 hover:text-foreground transition-colors duration-300">

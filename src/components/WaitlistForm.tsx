@@ -68,7 +68,7 @@ export const WaitlistForm = () => {
               className="text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-4 tracking-tight"
               style={{ animationDelay: "0.3s" }}
             >
-              <span className="gradient-text">Join the NexAI SEO Research Waitlist</span>
+              <span className="gradient-text">Join the NexAI SEO Waitlist</span>
             </h1>
 
             {/* Subheading */}
@@ -76,9 +76,9 @@ export const WaitlistForm = () => {
               className="text-muted-foreground text-center text-base md:text-lg mb-10 max-w-md mx-auto leading-relaxed"
               style={{ animationDelay: "0.4s" }}
             >
-              We're exploring how brands gain visibility inside AI-generated answers.
+              We're building NexAI SEO to help brands stay visible as search moves from links to AI-generated answers.
               <br />
-              Join the waitlist to receive early research updates.
+              Join the waitlist for early access updates.
             </p>
 
             {/* Form */}
@@ -141,7 +141,7 @@ export const WaitlistForm = () => {
               className="text-center text-xs text-muted-foreground/60"
               style={{ animationDelay: "0.6s" }}
             >
-              No spam. Early research updates only.
+              No spam. Early access updates only.
             </p>
           </>
         ) : (
