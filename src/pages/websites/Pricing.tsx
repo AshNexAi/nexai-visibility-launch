@@ -6,9 +6,11 @@ import { CheckCircle2, ArrowRight, Shield } from "lucide-react";
 const plans = [
   {
     name: "Basic",
-    description: "Perfect for getting started",
+    subtitle: "Best for small shops and personal brands",
     pages: "1 Page",
-    price: "₹4,999",
+    originalPrice: "₹8,999",
+    currentPrice: "₹3,999",
+    badge: "Early Access Price",
     features: [
       "Single-page website",
       "Mobile responsive design",
@@ -20,9 +22,11 @@ const plans = [
   },
   {
     name: "Standard",
-    description: "Most popular choice",
+    subtitle: "Best for clinics, gyms, and service businesses",
     pages: "3–5 Pages",
-    price: "₹9,999",
+    originalPrice: "₹14,999",
+    currentPrice: "₹7,999",
+    badge: "Early Access Price",
     features: [
       "3–5 page website",
       "Mobile responsive design",
@@ -36,9 +40,11 @@ const plans = [
   },
   {
     name: "Premium",
-    description: "Complete solution",
+    subtitle: "Best for businesses serious about growth",
     pages: "Full Website",
-    price: "₹19,999",
+    originalPrice: "₹24,999",
+    currentPrice: "₹14,999",
+    badge: "Founding Client Offer",
     features: [
       "Unlimited pages",
       "Premium design & animations",
@@ -79,6 +85,11 @@ export default function Pricing() {
       {/* Pricing Cards */}
       <section className="py-16 border-t border-border/20">
         <div className="max-w-6xl mx-auto px-6">
+          {/* Trust copy above cards */}
+          <p className="text-center text-muted-foreground mb-10">
+            Early access pricing for our first set of website clients.
+          </p>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {plans.map((plan) => (
               <div 
@@ -99,8 +110,20 @@ export default function Pricing() {
                 
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{plan.description}</p>
-                  <div className="text-4xl font-bold gradient-text mb-1">{plan.price}</div>
+                  <p className="text-sm text-muted-foreground mb-2">{plan.subtitle}</p>
+                  
+                  {/* Price badge */}
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-3">
+                    {plan.badge}
+                  </span>
+                  
+                  {/* Strike-through original price */}
+                  <div className="text-sm text-muted-foreground/60 line-through mb-1">
+                    {plan.originalPrice}
+                  </div>
+                  
+                  {/* Current price */}
+                  <div className="text-4xl font-bold gradient-text mb-1">{plan.currentPrice}</div>
                   <p className="text-sm text-muted-foreground">{plan.pages}</p>
                 </div>
                 
@@ -113,7 +136,7 @@ export default function Pricing() {
                   ))}
                 </ul>
                 
-                <Link to="/websites/contact" className="block">
+                <Link to="/websites/contact" className="block space-y-2">
                   <Button 
                     className={`w-full ${plan.popular ? "glow-primary" : ""}`}
                     variant={plan.popular ? "default" : "outline"}
@@ -121,10 +144,18 @@ export default function Pricing() {
                     Get Started
                     <ArrowRight className="w-4 h-4" />
                   </Button>
+                  <p className="text-xs text-center text-muted-foreground">
+                    Request Free Website Preview
+                  </p>
                 </Link>
               </div>
             ))}
           </div>
+          
+          {/* Trust copy below cards */}
+          <p className="text-center text-muted-foreground mt-10 text-sm">
+            No payment required until you approve the demo website.
+          </p>
         </div>
       </section>
 
