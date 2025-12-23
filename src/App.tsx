@@ -15,6 +15,7 @@ import Contact from "./pages/websites/Contact";
 
 // Demo Websites
 import OldTreesCafeKompally from "./pages/demos/OldTreesCafeKompally";
+import MalibuCocktailBarKompally from "./pages/demos/MalibuCocktailBarKompally";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           
           {/* Demo Websites */}
           <Route path="/websites/demos/old-trees-cafe-kompally" element={<OldTreesCafeKompally />} />
+          <Route path="/websites/demos/malibu-cocktail-bar-kompally" element={<MalibuCocktailBarKompally />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
