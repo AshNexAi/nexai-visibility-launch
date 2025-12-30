@@ -1,10 +1,5 @@
 import OpenAI from "openai";
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 // Generic service/profession terms that indicate a category input
 const GENERIC_CATEGORY_TERMS = [
   "dentist",
@@ -176,12 +171,21 @@ export default async function handler(req: any, res: any) {
   }
 
   // Check if OpenAI API key is configured
-  if (!process.env.OPENAI_API_KEY) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
     console.error("❌ OPENAI_API_KEY is not configured!");
     return res.status(500).json({
       error: "Unable to generate GEO snapshot at this time.",
     });
   }
+
+  // Log API key status (without exposing the actual key)
+  console.log("✅ OpenAI API key found (length:", apiKey.length, "chars, starts with:", apiKey.substring(0, 7) + "...)");
+
+  // Initialize OpenAI client with API key (inside handler to ensure env var is available)
+  const openai = new OpenAI({
+    apiKey: apiKey,
+  });
 
   try {
     // Get appropriate questions based on input type
