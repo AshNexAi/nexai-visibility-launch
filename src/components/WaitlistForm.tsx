@@ -30,8 +30,10 @@ export const WaitlistForm = () => {
     }
 
     setIsSubmitting(true);
+    console.log("📝 Form submitted with email:", email);
 
     try {
+      console.log("🌐 Sending request to /api/waitlist...");
       const response = await fetch("/api/waitlist", {
         method: "POST",
         headers: {
@@ -40,16 +42,22 @@ export const WaitlistForm = () => {
         body: JSON.stringify({ email }),
       });
 
+      console.log("📡 Response status:", response.status, response.statusText);
+
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        console.error("❌ API error response:", data);
         throw new Error(
           (data as { error?: string }).error || "Something went wrong. Please try again."
         );
       }
 
+      const result = await response.json();
+      console.log("✅ API success response:", result);
       setIsSubmitted(true);
       setEmail("");
     } catch (err) {
+      console.error("❌ Form submission error:", err);
       const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
       setError(message);
     } finally {
