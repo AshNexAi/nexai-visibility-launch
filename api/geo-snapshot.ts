@@ -192,10 +192,13 @@ export default async function handler(req: any, res: any) {
     const questions = getQuestionsForInput(input);
     console.log("🤖 Asking OpenAI questions (type:", isCategory ? "Category" : "Brand", ")...");
     console.log("📋 Questions:", questions);
+    console.log("🔑 About to call OpenAI API with key:", apiKey ? `sk-...${apiKey.slice(-4)}` : "MISSING");
 
     // Ask all questions in parallel for efficiency
-    const questionPromises = questions.map((question) =>
-      openai.chat.completions.create({
+    console.log("📞 Making OpenAI API calls now...");
+    const questionPromises = questions.map((question, index) => {
+      console.log(`📞 OpenAI call ${index + 1}/${questions.length}:`, question.substring(0, 50) + "...");
+      return openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
           {
@@ -205,11 +208,19 @@ export default async function handler(req: any, res: any) {
         ],
         max_tokens: 500,
         temperature: 0.7,
-      })
-    );
+      });
+    });
 
+    console.log("⏳ Waiting for OpenAI responses...");
     const responses = await Promise.all(questionPromises);
     console.log("✅ Received", responses.length, "AI responses");
+    console.log("📊 Response details:", responses.map((r, i) => ({
+      index: i + 1,
+      hasContent: !!r.choices[0]?.message?.content,
+      contentLength: r.choices[0]?.message?.content?.length || 0,
+      model: r.model,
+      usage: r.usage,
+    })));
 
     // Combine all AI responses into one text
     const combinedText = responses

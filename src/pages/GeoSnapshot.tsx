@@ -57,6 +57,7 @@ const GeoSnapshot = () => {
     setHasSubmitted(true);
     
     try {
+      console.log("🌐 Calling /api/geo-snapshot with:", { brand: brandName, website: websiteUrl });
       const response = await fetch("/api/geo-snapshot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,8 +67,12 @@ const GeoSnapshot = () => {
         }),
       });
 
+      console.log("📡 API Response status:", response.status, response.statusText);
+      console.log("📡 API Response headers:", Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error("❌ API Error:", errorData);
         throw new Error(
           (errorData as { error?: string }).error ||
             "We couldn't generate a snapshot right now. Please try again."
@@ -75,6 +80,7 @@ const GeoSnapshot = () => {
       }
 
       const data = await response.json();
+      console.log("✅ API Success - Received data:", data);
       setResult(data);
     } catch (err) {
       const message =
