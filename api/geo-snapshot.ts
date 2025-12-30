@@ -149,6 +149,7 @@ function generateGEOInsight(
 }
 
 // Vercel serverless function entrypoint
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
   console.log("🔍 GEO Snapshot API called - Method:", req.method);
 
