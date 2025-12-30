@@ -43,19 +43,32 @@ const GeoSnapshot = () => {
     setError(null);
     
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/geo-snapshot', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ brandName, websiteUrl }),
-      // });
-      // const data = await response.json();
-      
-      const data = await mockApiResponse(brandName);
+      const response = await fetch("/api/geo-snapshot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brand: brandName,
+          website: websiteUrl || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          (errorData as { error?: string }).error ||
+            "We couldn't generate a snapshot right now. Please try again."
+        );
+      }
+
+      const data = await response.json();
       setResult(data);
       setHasSubmitted(true);
-    } catch {
-      setError("We couldn't generate a snapshot right now. Please try again.");
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "We couldn't generate a snapshot right now. Please try again.";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
