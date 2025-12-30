@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Badge } from "@/components/Badge";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { InfoSections } from "@/components/InfoSections";
 import { Footer } from "@/components/Footer";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
+import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   return (
@@ -42,6 +44,20 @@ const Index = () => {
 
           {/* Waitlist Form */}
           <WaitlistForm />
+
+          {/* GEO Snapshot Link */}
+          <div 
+            className="mt-8 animate-fade-in-up"
+            style={{ animationDelay: "0.5s", animationFillMode: "backwards" }}
+          >
+            <Link 
+              to="/geo-snapshot"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+            >
+              <span>Run a GEO Snapshot</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
 
           {/* Scroll indicator */}
           <ScrollIndicator />
