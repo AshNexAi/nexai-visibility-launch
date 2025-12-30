@@ -38,10 +38,30 @@ export default async function handler(req: any, res: any) {
       from: "NexAI SEO <waitlist@nexaiseo.com>",
       to: email,
       subject: "You're on the NexAI SEO waitlist ✅",
-      text:
-        "Thanks for joining the NexAI SEO waitlist!\n\n" +
-        "We'll email you as soon as we're live and share early access updates.\n\n" +
-        "- NexAI SEO team",
+      html: `<div style="font-family: Arial, sans-serif; color: #111; line-height: 1.6;">
+  <p>Hi,</p>
+
+  <p>
+    Thanks for joining the <strong>NexAI SEO</strong> waitlist.
+  </p>
+
+  <p>
+    We’re building NexAI SEO to help brands stay visible as search shifts
+    from links to AI-generated answers.
+  </p>
+
+  <p>
+    You’ll hear from us when we open early access and share progress updates.
+  </p>
+
+  <p style="color: #555; font-size: 14px;">
+    No spam — just meaningful updates.
+  </p>
+
+  <p>
+    – <strong>NexAI SEO</strong>
+  </p>
+</div>`,
     });
 
     console.log("✅ Email sent successfully! Resend response:", JSON.stringify(result, null, 2));
