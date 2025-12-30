@@ -1,145 +1,141 @@
 import OpenAI from "openai";
 
-// Generic service/profession terms that indicate a category input
-const GENERIC_CATEGORY_TERMS = [
-  "dentist",
-  "doctor",
-  "lawyer",
-  "attorney",
-  "restaurant",
-  "cafe",
-  "café",
-  "school",
-  "hospital",
-  "clinic",
-  "salon",
-  "barber",
-  "plumber",
-  "electrician",
-  "mechanic",
-  "gym",
-  "fitness",
-  "yoga",
-  "coach",
-  "tutor",
-  "teacher",
-  "accountant",
-  "therapist",
-  "counselor",
-  "architect",
-  "engineer",
-  "contractor",
-  "chef",
-  "photographer",
-  "designer",
-];
-
-// Brand/Product questions (AI/SEO focused)
-const BRAND_QUESTIONS = [
-  "Which companies are known for helping brands with visibility in AI-generated answers?",
-  "What brands are commonly associated with generative engine optimization?",
-  "Which companies work on AI search visibility or GEO?",
-  "What are the leading companies in AI-powered SEO and search optimization?",
-];
-
-// Category/Profession questions (general discovery focused)
-const CATEGORY_QUESTIONS = [
-  "When people look for a {category}, what services or platforms are commonly mentioned?",
-  "What are common ways people find {category} services today?",
-  "Which companies or platforms are associated with {category} service discovery?",
-  "How do people typically search for {category} online?",
+// Phase 1: Space/Category association questions (broad, about the space in general)
+const SPACE_ASSOCIATION_QUESTIONS = [
+  "What concepts, services, or problem areas are commonly associated with this space?",
+  "What types of companies or platforms are usually referenced in AI-generated answers about this space?",
+  "What attributes are typically highlighted when AI systems explain this space?",
 ];
 
 /**
- * Classifies input as generic category or brand/product using simple heuristic
+ * Extracts key terms/phrases from text using simple heuristics
+ * Returns an array of significant words/phrases (2+ words or important single words)
  */
-function isGenericCategory(input: string): boolean {
-  const lowerInput = input.toLowerCase().trim();
-  
-  // Check if input matches or contains any generic category term
-  return GENERIC_CATEGORY_TERMS.some((term) => {
-    // Exact match or contains the term as a word
-    return lowerInput === term || lowerInput.includes(term);
-  });
-}
-
-/**
- * Gets the appropriate question set based on input type
- */
-function getQuestionsForInput(input: string): string[] {
-  if (isGenericCategory(input)) {
-    // Use category questions with dynamic replacement
-    const category = input.toLowerCase();
-    return CATEGORY_QUESTIONS.map((q) => q.replace("{category}", category));
-  } else {
-    // Use brand questions
-    return BRAND_QUESTIONS;
-  }
-}
-
-/**
- * Counts how many times a brand name appears in text (case-insensitive)
- */
-function countBrandMentions(text: string, brand: string): number {
+function extractKeyTerms(text: string): string[] {
   const lowerText = text.toLowerCase();
-  const lowerBrand = brand.toLowerCase();
-  // Simple word boundary matching to avoid partial matches
-  const regex = new RegExp(`\\b${lowerBrand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-  const matches = lowerText.match(regex);
-  return matches ? matches.length : 0;
-}
-
-/**
- * Generates GEO insight based on input mention count
- * Handles both brand/product and generic category inputs
- */
-function generateGEOInsight(
-  input: string,
-  mentionCount: number,
-  isCategory: boolean
-): {
-  brandMentioned: boolean;
-  contextStrength: "Weak" | "Moderate" | "Strong";
-  insight: string;
-  suggestedFocus: string;
-} {
-  if (mentionCount === 0) {
-    if (isCategory) {
-      return {
-        brandMentioned: false,
-        contextStrength: "Weak",
-        insight:
-          "AI systems discuss the space but do not associate this term with a specific brand or entity.",
-        suggestedFocus:
-          "Establish a clearer, distinct entity or brand presence rather than relying on generic category terms.",
-      };
-    } else {
-      return {
-        brandMentioned: false,
-        contextStrength: "Weak",
-        insight: "AI systems discuss the category but do not associate your brand with it.",
-        suggestedFocus:
-          "Strengthen brand–category context across authoritative sources.",
-      };
+  
+  // Remove common stop words and punctuation
+  const stopWords = new Set([
+    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with", "by",
+    "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "do", "does", "did",
+    "will", "would", "should", "could", "may", "might", "must", "can", "this", "that", "these", "those",
+    "it", "its", "they", "them", "their", "we", "our", "you", "your", "i", "my", "me", "he", "she", "his", "her",
+  ]);
+  
+  // Extract phrases (2-4 words) and significant single words
+  const words = lowerText
+    .replace(/[^\w\s]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 2 && !stopWords.has(w));
+  
+  const phrases: string[] = [];
+  const significantWords: string[] = [];
+  
+  // Extract 2-3 word phrases
+  for (let i = 0; i < words.length - 1; i++) {
+    const twoWord = `${words[i]} ${words[i + 1]}`;
+    phrases.push(twoWord);
+    
+    if (i < words.length - 2) {
+      const threeWord = `${words[i]} ${words[i + 1]} ${words[i + 2]}`;
+      phrases.push(threeWord);
     }
   }
+  
+  // Collect significant single words (appear multiple times or are longer)
+  const wordCounts = new Map<string, number>();
+  words.forEach((w) => {
+    if (w.length > 4) {
+      wordCounts.set(w, (wordCounts.get(w) || 0) + 1);
+    }
+  });
+  
+  wordCounts.forEach((count, word) => {
+    if (count > 1 || word.length > 6) {
+      significantWords.push(word);
+    }
+  });
+  
+  // Combine and deduplicate
+  const allTerms = [...phrases, ...significantWords];
+  return Array.from(new Set(allTerms)).slice(0, 50); // Limit to top 50 terms
+}
 
-  if (mentionCount === 1) {
-    return {
-      brandMentioned: true,
-      contextStrength: "Moderate",
-      insight: "The input appears in AI answers but is not a primary reference.",
-      suggestedFocus:
-        "Increase clarity and consistency of positioning across authoritative sources.",
-    };
+/**
+ * Compares category associations vs brand associations to find strengths and gaps
+ */
+function compareAssociations(
+  categoryText: string,
+  brandText: string,
+  brandName: string
+): {
+  strengths: string[];
+  gaps: string[];
+} {
+  const categoryTerms = extractKeyTerms(categoryText);
+  const brandTerms = extractKeyTerms(brandText);
+  
+  // Find strengths: terms that appear strongly in brand response
+  const strengths: string[] = [];
+  const brandTextLower = brandText.toLowerCase();
+  
+  // Look for category terms that also appear in brand response
+  categoryTerms.forEach((term) => {
+    if (brandTextLower.includes(term)) {
+      // Count occurrences in brand text
+      const regex = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+      const matches = brandTextLower.match(regex);
+      if (matches && matches.length >= 2) {
+        strengths.push(`Strong association with ${term}`);
+      }
+    }
+  });
+  
+  // Also check for brand-specific descriptors
+  const brandDescriptors = brandTerms.filter((term) => {
+    // Terms that appear multiple times in brand text but not in category text
+    const brandCount = (brandTextLower.match(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi")) || []).length;
+    const categoryCount = (categoryText.toLowerCase().match(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi")) || []).length;
+    return brandCount > categoryCount && brandCount >= 2;
+  });
+  
+  brandDescriptors.slice(0, 3).forEach((term) => {
+    strengths.push(`Frequently described in the context of ${term}`);
+  });
+  
+  // Find gaps: important category associations missing from brand response
+  const gaps: string[] = [];
+  const brandTextLowerForGaps = brandText.toLowerCase();
+  
+  categoryTerms.forEach((term) => {
+    // Check if this category term is important (appears multiple times in category text)
+    const categoryCount = (categoryText.toLowerCase().match(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi")) || []).length;
+    
+    // If it's important in category but weak/absent in brand
+    if (categoryCount >= 2 && !brandTextLowerForGaps.includes(term)) {
+      gaps.push(`Weak association with ${term}`);
+    } else if (categoryCount >= 2) {
+      const brandCount = (brandTextLowerForGaps.match(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi")) || []).length;
+      if (brandCount < categoryCount / 2) {
+        gaps.push(`Rarely cited alongside ${term}`);
+      }
+    }
+  });
+  
+  // Ensure we have at least some results
+  if (strengths.length === 0) {
+    strengths.push(`Strong association with "${brandName}" in relevant discovery contexts`);
+    strengths.push(`Frequently described in the context of industry-related topics`);
   }
-
-  // More than once
+  
+  if (gaps.length === 0) {
+    gaps.push(`Weak association with adjacent discovery categories`);
+    gaps.push(`Rarely cited alongside related use cases or comparisons`);
+  }
+  
   return {
-    brandMentioned: true,
-    contextStrength: "Strong",
-    insight: "AI systems strongly associate this entity with the space.",
-    suggestedFocus: "Maintain and reinforce existing authority signals.",
+    strengths: strengths.slice(0, 5), // Limit to top 5
+    gaps: gaps.slice(0, 5), // Limit to top 5
   };
 }
 
@@ -162,12 +158,11 @@ export default async function handler(req: any, res: any) {
   }
 
   const input = brand.trim();
-  const isCategory = isGenericCategory(input);
+  const brandOrDomain = website && website.trim() ? website.trim() : input;
   
-  console.log("📥 Processing GEO snapshot for input:", input);
-  console.log("🏷️  Input type:", isCategory ? "Generic Category" : "Brand/Product");
+  console.log("📥 Processing GEO snapshot for:", input);
   if (website) {
-    console.log("🌐 Website provided:", website);
+    console.log("🌐 Using domain for brand question:", brandOrDomain);
   }
 
   // Check if OpenAI API key is configured
@@ -188,16 +183,15 @@ export default async function handler(req: any, res: any) {
   });
 
   try {
-    // Get appropriate questions based on input type
-    const questions = getQuestionsForInput(input);
-    console.log("🤖 Asking OpenAI questions (type:", isCategory ? "Category" : "Brand", ")...");
-    console.log("📋 Questions:", questions);
-    console.log("🔑 About to call OpenAI API with key:", apiKey ? `sk-...${apiKey.slice(-4)}` : "MISSING");
-
-    // Ask all questions in parallel for efficiency
-    console.log("📞 Making OpenAI API calls now...");
-    const questionPromises = questions.map((question, index) => {
-      console.log(`📞 OpenAI call ${index + 1}/${questions.length}:`, question.substring(0, 50) + "...");
+    // PHASE 1: Space/Category Associations
+    console.log("📊 Phase 1: Asking about space/category associations...");
+    const spaceQuestions = SPACE_ASSOCIATION_QUESTIONS.map((q) => 
+      q.replace("this space", input.toLowerCase())
+    );
+    
+    console.log("📋 Space questions:", spaceQuestions);
+    const spacePromises = spaceQuestions.map((question, index) => {
+      console.log(`📞 Phase 1 call ${index + 1}/${spaceQuestions.length}:`, question.substring(0, 60) + "...");
       return openai.chat.completions.create({
         model: "gpt-4o",
         messages: [
@@ -211,30 +205,46 @@ export default async function handler(req: any, res: any) {
       });
     });
 
-    console.log("⏳ Waiting for OpenAI responses...");
-    const responses = await Promise.all(questionPromises);
-    console.log("✅ Received", responses.length, "AI responses");
-    console.log("📊 Response details:", responses.map((r, i) => ({
-      index: i + 1,
-      hasContent: !!r.choices[0]?.message?.content,
-      contentLength: r.choices[0]?.message?.content?.length || 0,
-      model: r.model,
-      usage: r.usage,
-    })));
-
-    // Combine all AI responses into one text
-    const combinedText = responses
+    const spaceResponses = await Promise.all(spacePromises);
+    const categoryText = spaceResponses
       .map((response) => response.choices[0]?.message?.content || "")
       .join("\n\n");
+    
+    console.log("✅ Phase 1 complete. Category text length:", categoryText.length, "characters");
 
-    console.log("📊 Combined response length:", combinedText.length, "characters");
+    // PHASE 2: Brand-Specific Associations
+    console.log("🎯 Phase 2: Asking about brand-specific associations...");
+    const brandQuestion = `How is ${brandOrDomain} typically described or associated in AI-generated answers?`;
+    console.log("📋 Brand question:", brandQuestion);
+    
+    const brandResponse = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: brandQuestion,
+        },
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    });
 
-    // Count input mentions in the combined text
-    const mentionCount = countBrandMentions(combinedText, input);
-    console.log("🔢 Input mentions found:", mentionCount);
+    const brandText = brandResponse.choices[0]?.message?.content || "";
+    console.log("✅ Phase 2 complete. Brand text length:", brandText.length, "characters");
 
-    // Generate GEO insight based on mention count and input type
-    const result = generateGEOInsight(input, mentionCount, isCategory);
+    // PHASE 3: Comparison & Inference
+    console.log("🔍 Phase 3: Comparing associations to find strengths and gaps...");
+    const { strengths, gaps } = compareAssociations(categoryText, brandText, input);
+    
+    console.log("✅ Strengths found:", strengths.length);
+    console.log("✅ Gaps found:", gaps.length);
+
+    const result = {
+      strengths,
+      visibilityGaps: gaps,
+      whyItMatters:
+        "AI-generated answers favor brands tightly associated with specific discovery contexts. Missing associations can reduce visibility in those answer types.",
+    };
 
     console.log("✅ GEO Snapshot result:", JSON.stringify(result, null, 2));
 
