@@ -4,13 +4,15 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, Check, AlertCircle } from "lucide-react";
 
 interface SnapshotResult {
   brandMentioned: boolean;
   contextStrength: "Strong" | "Moderate" | "Weak";
   insight: string;
   suggestedFocus: string;
+  strengths?: string[];
+  visibilityGaps?: string[];
 }
 
 // Mock API response for development
@@ -45,7 +47,6 @@ const GeoSnapshot = () => {
   const [result, setResult] = useState<SnapshotResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [isInterpretationOpen, setIsInterpretationOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -256,63 +257,72 @@ const GeoSnapshot = () => {
                 className="card-glow rounded-2xl p-8 animate-fade-in"
               >
                 {/* Result Header */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-2">
-                    GEO Snapshot Result
+                <div className="mb-8 pb-6 border-b border-border/30">
+                  <h2 className="text-xl font-semibold text-foreground">
+                    GEO Snapshot — {brandName}
                   </h2>
-                  <p className="text-sm text-muted-foreground">
-                    Analysis for <span className="text-foreground font-medium">{brandName}</span>
-                  </p>
                 </div>
 
-                <div className="space-y-6">
-                  {/* Key Metrics */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* Brand Mentioned */}
-                    <div className="p-4 rounded-xl bg-background/50 border border-border/50">
-                      <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Brand Mentioned</p>
-                      <p className={`text-lg font-semibold ${result.brandMentioned ? "text-primary" : "text-muted-foreground"}`}>
-                        {result.brandMentioned ? "Yes" : "No"}
-                      </p>
-                    </div>
-
-                    {/* Context Strength */}
-                    <div className="p-4 rounded-xl bg-background/50 border border-border/50">
-                      <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wide">Context Strength</p>
-                      <p className={`text-lg font-semibold ${
-                        result.contextStrength === "Strong" ? "text-primary" :
-                        result.contextStrength === "Moderate" ? "text-secondary" :
-                        "text-muted-foreground"
-                      }`}>
-                        {result.contextStrength}
-                      </p>
-                    </div>
+                <div className="space-y-8">
+                  {/* Strengths Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-foreground/90 uppercase tracking-wide">
+                      Your strengths
+                    </h3>
+                    <ul className="space-y-3">
+                      {(result.strengths && result.strengths.length > 0 ? result.strengths : [
+                        `Strong association with "${brandName}" in relevant discovery contexts`,
+                        `Frequently described in the context of industry-related topics`
+                      ]).map((strength, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <div className="mt-0.5 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Check className="w-3 h-3 text-primary" />
+                          </div>
+                          <span className="text-foreground/80 leading-relaxed">{strength}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px bg-border/50" />
+                  <div className="h-px bg-border/30" />
 
-                  {/* Insight */}
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">Insight</p>
-                    <p className="text-foreground/90 leading-relaxed">
-                      {result.insight}
-                    </p>
+                  {/* Visibility Gaps Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-medium text-foreground/90 uppercase tracking-wide">
+                      Visibility gaps
+                    </h3>
+                    <ul className="space-y-3">
+                      {(result.visibilityGaps && result.visibilityGaps.length > 0 ? result.visibilityGaps : [
+                        `Weak association with adjacent discovery categories`,
+                        `Rarely cited alongside related use cases or comparisons`
+                      ]).map((gap, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <div className="mt-0.5 w-5 h-5 rounded-full bg-muted/50 flex items-center justify-center flex-shrink-0">
+                            <AlertCircle className="w-3 h-3 text-muted-foreground" />
+                          </div>
+                          <span className="text-foreground/70 leading-relaxed">{gap}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px bg-border/50" />
+                  <div className="h-px bg-border/30" />
 
-                  {/* Suggested Focus */}
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">Suggested Focus</p>
-                    <p className="text-foreground/90 leading-relaxed">
-                      {result.suggestedFocus}
+                  {/* Why This Matters Section */}
+                  <div className="space-y-3 p-4 rounded-xl bg-muted/20 border border-border/20">
+                    <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      Why this matters
+                    </h3>
+                    <p className="text-sm text-foreground/70 leading-relaxed">
+                      AI-generated answers favor brands that are tightly associated with specific discovery contexts.
+                      Missing associations can reduce visibility in those answer types.
                     </p>
                   </div>
 
                   {/* Reset Button */}
-                  <div className="pt-4">
+                  <div className="pt-2">
                     <Button
                       onClick={handleReset}
                       variant="outline"
@@ -320,55 +330,6 @@ const GeoSnapshot = () => {
                     >
                       Run Another Snapshot
                     </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Result Interpretation Section */}
-              <div 
-                className="mt-6 card-glow rounded-2xl overflow-hidden animate-fade-in"
-                style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
-              >
-                <button
-                  onClick={() => setIsInterpretationOpen(!isInterpretationOpen)}
-                  className="w-full p-5 flex items-center justify-between text-left hover:bg-card/50 transition-colors"
-                >
-                  <span className="text-sm font-medium text-muted-foreground">
-                    How to interpret this result
-                  </span>
-                  <ChevronDown 
-                    className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${
-                      isInterpretationOpen ? "rotate-180" : ""
-                    }`} 
-                  />
-                </button>
-                
-                <div 
-                  className={`overflow-hidden transition-all duration-300 ${
-                    isInterpretationOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                >
-                  <div className="px-5 pb-5 space-y-4 border-t border-border/30">
-                    <div className="pt-4 space-y-4 text-sm">
-                      <div>
-                        <p className="font-medium text-foreground/80 mb-1">Brand Mentioned</p>
-                        <p className="text-muted-foreground leading-relaxed">
-                          Indicates whether your brand currently appears in AI-generated answers for this category.
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-foreground/80 mb-1">Context Strength</p>
-                        <p className="text-muted-foreground leading-relaxed">
-                          Describes how strongly AI systems associate your brand with the category or problem space.
-                        </p>
-                      </div>
-                      <div className="pt-2 border-t border-border/30">
-                        <p className="font-medium text-foreground/80 mb-1">Why this matters</p>
-                        <p className="text-muted-foreground leading-relaxed">
-                          As search shifts to AI-generated answers, visibility depends on how AI systems understand and connect brand entities — not just rankings.
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
