@@ -31,16 +31,27 @@ export const WaitlistForm = () => {
 
     setIsSubmitting(true);
 
-    // Mock submission - replace with actual API call
-    // Example integrations:
-    // - Formspree: fetch("https://formspree.io/f/YOUR_ID", { method: "POST", body: JSON.stringify({ email }) })
-    // - EmailJS: emailjs.send("service_id", "template_id", { email })
-    // - Resend: Call your edge function that uses Resend
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(
+          (data as { error?: string }).error || "Something went wrong. Please try again."
+        );
+      }
+
       setIsSubmitted(true);
-    } catch {
-      setError("Something went wrong. Please try again.");
+      setEmail("");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
