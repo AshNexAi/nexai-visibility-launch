@@ -20,10 +20,13 @@ export default async function handler(req: any, res: any) {
 
   try {
     await resend.emails.send({
-      from: "waitlist@nexaiseo.com",
-      to: "aashutosh@nexaiseo.com",
-      subject: "New waitlist signup",
-      text: `New waitlist signup: ${email}`,
+      from: "NexAI SEO <waitlist@nexaiseo.com>",
+      to: email,
+      subject: "You're on the NexAI SEO waitlist ✅",
+      text:
+        "Thanks for joining the NexAI SEO waitlist!\n\n" +
+        "We’ll email you as soon as we’re live and share early access updates.\n\n" +
+        "- NexAI SEO team",
     });
 
     return res.status(200).json({ ok: true });
