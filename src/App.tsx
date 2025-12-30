@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import GeoSnapshot from "./pages/GeoSnapshot";
 import NotFound from "./pages/NotFound";
 
 // Website Services Pages
@@ -27,6 +28,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/geo-snapshot" element={<GeoSnapshot />} />
           
           {/* Website Services Routes */}
           <Route path="/websites" element={<WebsitesHome />} />
